@@ -1,0 +1,54 @@
+{
+  "scoringMethod": "Weighted Sum Approach",
+  "description": "This method computes the composite digital score by combining the Traditional Data Score, Borrower Creditworthiness Index (BCI), and Property Quality Index (PQI). Each component is first normalized to a 0-100 scale and then weighted before scaling to the 300-850 range.",
+  "configuration": {
+    "weights": {
+      "TraditionalScore": 0.20,
+      "BCI": 0.40,
+      "PQI": 0.40
+    },
+    "scoreRange": {
+      "min": 300,
+      "max": 850
+    }
+  },
+  "additionalMeasures": [
+    {
+      "name": "Normalized Traditional Score",
+      "formula": "NormalizedTraditional = ((TraditionalScore - minTraditional) / (maxTraditional - minTraditional)) * 100",
+      "notes": "Normalize the Traditional Score to a 0-100 scale based on historical min and max values."
+    },
+    {
+      "name": "Normalized BCI",
+      "formula": "NormalizedBCI = ((BCI - minBCI) / (maxBCI - minBCI)) * 100",
+      "notes": "Normalize the Borrower Creditworthiness Index (BCI) to a 0-100 scale."
+    },
+    {
+      "name": "Normalized PQI",
+      "formula": "NormalizedPQI = ((PQI - minPQI) / (maxPQI - minPQI)) * 100",
+      "notes": "Normalize the Property Quality Index (PQI) to a 0-100 scale."
+    }
+  ],
+  "componentFormulas": {
+    "BCI": {
+      "formula": "BCI = (TraditionalComponent * 0.3) + (AlternateComponent * 0.7)",
+      "details": {
+        "TraditionalComponent": "Includes credit scores, income, and repayment history.",
+        "AlternateComponent": "Includes utility payment consistency, bank transaction patterns, social media/employment data, and other behavioral metrics.",
+        "weightExplanation": "Emphasizes alternate data (70%) over traditional data (30%) for a more accurate assessment of thin-/no-file borrowers."
+      }
+    },
+    "PQI": {
+      "formula": "PQI = (LocationScore * 0.25) + (StructuralScore * 0.30) + (MarketTrendScore * 0.25) + (DisasterRiskScore * 0.20)",
+      "details": {
+        "LocationScore": "Assessed based on neighborhood quality, connectivity, and environmental risks.",
+        "StructuralScore": "Derived from visual data (photos, videos) and sensor data assessing roofing, paint, and overall structural integrity.",
+        "MarketTrendScore": "Based on recent comparable sales, market dynamics, and rental trends.",
+        "DisasterRiskScore": "Evaluates the risk from natural disasters and environmental hazards.",
+        "weightExplanation": "Weights are assigned to reflect the relative importance of each aspect in determining the property's overall quality."
+      }
+    }
+  },
+  "finalCompositeFormula": "CompositeScore = 300 + ((0.20 * NormalizedTraditional) + (0.40 * NormalizedBCI) + (0.40 * NormalizedPQI)) * ((850 - 300) / 100)",
+  "explanation": "Each component (Traditional, BCI, PQI) is first normalized to a 0-100 scale. The BCI is calculated as a weighted sum of traditional and alternate borrower metrics, while the PQI is derived from weighted scores of location, structure, market trends, and disaster risk. These normalized scores are then combined using the specified weights and scaled to the 300-850 range to yield the final composite digital score."
+}

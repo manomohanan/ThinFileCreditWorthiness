@@ -1,0 +1,35 @@
+{
+  "fraud_detection_rules": {
+    "identity_verification": {
+      "mismatch_threshold": 2,
+      "duplicate_entries_check": true
+    },
+    "income_verification": {
+      "income_sudden_increase_threshold": 50,
+      "employment_verification_required": true
+    },
+    "credit_score_anomalies": {
+      "multiple_inquiries_threshold": 3,
+      "sudden_credit_score_increase": 100
+    },
+    "property_valuation_checks": {
+      "overstated_value_threshold": 30,
+      "unverified_valuation_reports": true
+    },
+    "multi-loan_activity": {
+      "loan_application_count_threshold": 5,
+      "time_period_days": 30
+    },
+    "geolocation_mismatch": {
+      "allowed_variance_km": 50
+    },
+    "document_tampering": {
+      "image_metadata_verification": true,
+      "digital_signature_mandatory": true
+    },
+    "historical_disaster_score_check": {
+      "high_risk_threshold": 75,
+      "previous_claim_threshold": 3
+    }
+  }
+}

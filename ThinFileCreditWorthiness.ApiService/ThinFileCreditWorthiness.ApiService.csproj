@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>061e4d52-a044-4516-b7f3-587f8a22bbb9</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Templates\AgentSelection.yaml" />
+    <None Remove="Templates\BCIInspectorAgent.yaml" />
+    <None Remove="Templates\BCIReviewerAgent.yaml" />
+    <None Remove="Templates\BorrowerDataCollectionAgent.yaml" />
+    <None Remove="Templates\CreditDecisionAgent.yaml" />
+    <None Remove="Templates\FinalDecisionReviewAgent.yaml" />
+    <None Remove="Templates\FraudDetectionAgent.yaml" />
+    <None Remove="Templates\PQIInspectorAgent.yaml" />
+    <None Remove="Templates\PQIReviewerAgent.yaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Templates\AgentSelection.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\BCIInspectorAgent.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\BorrowerDataCollectionAgent.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\CreditDecisionAgent.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\FraudDetectionAgent.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\PQIInspectorAgent.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ThinFileCreditWorthiness.ServiceDefaults\ThinFileCreditWorthiness.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+	<PackageReference Include="Microsoft.SemanticKernel" Version="1.45.0" />
+	<PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.45.0" />
+	<PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.45.0" />
+	<PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.45.0" />
+	<PackageReference Include="Microsoft.SemanticKernel.Yaml" Version="1.45.0" />
+	<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.0" />
+	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.0" />
+	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Configs\Bangalore\Data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Configs\Coimbatore\Data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Configs\Delhi\Data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Configs\FraudConfig\Data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
