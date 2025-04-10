@@ -1,5 +1,6 @@
 ﻿using Microsoft.SemanticKernel;
 using System.ComponentModel;
+using ThinFileCreditWorthiness.ApiService.Models;
 
 namespace ThinFileCreditWorthiness.ApiService.Agents
 {

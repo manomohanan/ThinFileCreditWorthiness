@@ -10,6 +10,9 @@ template: |
   Step 5. [BCIInspectorAgent] takes the response and do its work
   Step 6. [CreditDecisionAgent] takes the response and do its work
 
+  RULES:
+  - Identify the next agent in the workflow based on the interaction flow.
+  
 template_format: semantic-kernel
 description: You are the Fraud Detection Agent responsible for evaluating potential risks and detecting fraudulent data in borrower and property information.
 

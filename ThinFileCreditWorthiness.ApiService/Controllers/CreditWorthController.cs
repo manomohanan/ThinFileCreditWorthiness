@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
+using ThinFileCreditWorthiness.ApiService.Models;
 using ThinFileCreditWorthiness.ApiService.Services;
 using static System.Net.WebRequestMethods;
 
@@ -48,7 +49,7 @@ namespace ThinFileCreditWorthiness.ApiService.Controllers
 
             var result = await this._creditEvaluationService.EvaluateCreditWorthinessAsync(jsonContent);
 
-            var messages = new List<string>();
+            var messages = new List<CreditWorthResponseModel>();
             while (retries < 10)
             {
                 try
@@ -59,9 +60,9 @@ namespace ThinFileCreditWorthiness.ApiService.Controllers
                         //await Response.Body.WriteAsync(buffer, 0, buffer.Length);
                         //await Response.Body.FlushAsync();
 
-                        var message = $"{item.AuthorName}:{item.Content}";
-                        this._logger.LogInformation(message);
-                        messages.Add(message);
+                        //var message = $"{item.AuthorName}:{item.Content}";
+                        this._logger.LogInformation(item.Content);
+                        messages.Add(new CreditWorthResponseModel { Assistant = item.AuthorName, Message = item.Content });
                     }
                     break;
                 }

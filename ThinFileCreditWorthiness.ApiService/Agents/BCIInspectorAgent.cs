@@ -1,5 +1,6 @@
 ﻿using Microsoft.SemanticKernel;
 using System.Text.Json;
+using ThinFileCreditWorthiness.ApiService.Models;
 
 namespace ThinFileCreditWorthiness.ApiService.Agents
 {
@@ -27,7 +28,7 @@ namespace ThinFileCreditWorthiness.ApiService.Agents
             var config = JsonSerializer.Deserialize<CreditDecisionConfig>(agentConfig);
             var args = new KernelArguments()
             {
-                //{ "borrowerProfile", JsonSerializer.Serialize(this._borrowerProfile) }
+                { "borrowerProfile", JsonSerializer.Serialize(this._borrowerProfile) }
             };
 
             return Task.FromResult(args);

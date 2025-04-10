@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+namespace ThinFileCreditWorthiness.ApiService.Models;
 public class CreditDecisionConfig
 {
     //[JsonPropertyName("scoringMethod")]

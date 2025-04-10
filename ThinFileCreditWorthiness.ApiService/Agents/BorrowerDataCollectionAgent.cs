@@ -1,5 +1,6 @@
 ﻿using Microsoft.SemanticKernel;
 using System.Text.Json;
+using ThinFileCreditWorthiness.ApiService.Models;
 
 namespace ThinFileCreditWorthiness.ApiService.Agents
 {

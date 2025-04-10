@@ -1,6 +1,7 @@
 ﻿using Microsoft.SemanticKernel;
 using System.Diagnostics;
 using System.Text.Json;
+using ThinFileCreditWorthiness.ApiService.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ThinFileCreditWorthiness.ApiService.Agents

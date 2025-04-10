@@ -12,7 +12,7 @@ namespace ThinFileCreditWorthiness.ApiService.Agents
             return Task.Run(() =>
             {
                 // TODO: Take this from an Enum
-                return agent.Name == "BorrowerDataCollectionAgent" && (history.LastOrDefault()?.Content?.Contains("[EVALUATIONCOMPLETE]") ?? false);
+                return agent.Name == "CreditDecisionAgent" && (history.LastOrDefault()?.Content?.Contains("[EVALUATIONCOMPLETE]") ?? false);
             });
         }
     }

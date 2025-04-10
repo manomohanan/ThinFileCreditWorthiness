@@ -10,10 +10,19 @@ template: |
   Borrower Profile:
   {{$borrowerProfile}}
 
+  INTERACTION FLOW:
+  Step 1. Interaction starts with [BorrowerDataCollectionAgent]
+  Step 2. [BorrowerDataCollectionAgent] sends response to [FraudDetectionAgent]
+  Step 3. [FraudDetectionAgent] takes the response and do its work and respond with [NORISKS] or [COMPLETED]
+  Step 4. [PQIInspectorAgent] takes the response and do its work
+  Step 5. [BCIInspectorAgent] takes the response and do its work
+  Step 6. [CreditDecisionAgent] takes the response and do its work
+
   RULES:
   - Return only a valid JSON with the required fields.
   - Do not include explanation or commentary.
   - Ensure the JSON follows the structure and types exactly as described in the schema.
+  - Identify the next agent in the workflow based on the interaction flow.
 
   SAMPLE RESPONSE:
   {
@@ -25,13 +34,7 @@ template: |
     "humanInTheLoop": true
   }
 
-  INTERACTION FLOW:
-  Step 1. Interaction starts with [BorrowerDataCollectionAgent]
-  Step 2. [BorrowerDataCollectionAgent] sends response to [FraudDetectionAgent]
-  Step 3. [FraudDetectionAgent] takes the response and do its work and respond with [NORISKS] or [COMPLETED]
-  Step 4. [PQIInspectorAgent] takes the response and do its work
-  Step 5. [BCIInspectorAgent] takes the response and do its work
-  Step 6. [CreditDecisionAgent] takes the response and do its work
+  
 
 template_format: semantic-kernel
 description: Analyze borrower profile to classify type, identify traditional/alternate sources, detect missing fields, and decide human review requirement.

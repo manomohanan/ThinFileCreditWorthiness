@@ -21,13 +21,15 @@ namespace ThinFileCreditWorthiness.ApiService.Agents
         private readonly PQIInspectorAgent _pqiInspectorAgent;
         private readonly BCIInspectorAgent _bciInspectorAgent;
         private readonly Kernel _kernel;
+        private readonly ILogger<AgentExecutionManager> _logger;
         public AgentExecutionManager(IConfiguration configuration, 
             Kernel kernel,
             BorrowerDataCollectionAgent borrowerDataCollectionAgent,
             FraudDetectionAgent fraudDetectionAgent,
             PQIInspectorAgent pqiInspectorAgent,
             BCIInspectorAgent bciInspectorAgent,
-            CreditDecisionAgent creditDecisionAgent)
+            CreditDecisionAgent creditDecisionAgent,
+            ILogger<AgentExecutionManager> logger)
         {
             this._configuration = configuration;
             this._creditDecisionAgent = creditDecisionAgent;
@@ -36,10 +38,12 @@ namespace ThinFileCreditWorthiness.ApiService.Agents
             this._pqiInspectorAgent = pqiInspectorAgent;
             this._bciInspectorAgent = bciInspectorAgent;
             this._fraudDetectionAgent = fraudDetectionAgent;
+            _logger = logger;
         }
 
         public async Task BuildAgents(string inputData)
         {
+            // TODO: Move the common props to AgentBase
             this._borrowerDataCollectionAgent.SetBorrowerData(inputData);
             var bcdAgent = await this._borrowerDataCollectionAgent.GetAgentAsync();
             agents.Add(bcdAgent);
@@ -47,9 +51,11 @@ namespace ThinFileCreditWorthiness.ApiService.Agents
             var fdAgent = await this._fraudDetectionAgent.GetAgentAsync();
             agents.Add(fdAgent);
 
+            this._pqiInspectorAgent.SetBorrowerData(inputData);
             var pqiAgent = await this._pqiInspectorAgent.GetAgentAsync();
             agents.Add(pqiAgent);
 
+            this._pqiInspectorAgent.SetBorrowerData(inputData);
             var bciAgent = await this._bciInspectorAgent.GetAgentAsync();
             agents.Add(bciAgent);
 
@@ -59,7 +65,7 @@ namespace ThinFileCreditWorthiness.ApiService.Agents
 
         public async Task<IAsyncEnumerable<ChatMessageContent>> ExecuteAsync(string userMessage)
         {
-            var selectionStrategy = await GetSelectionStrategy(); // new EvaluationAgentSelectionStrategy();
+            var selectionStrategy = new SequentialSelectionStrategy(); // new EvaluationAgentSelectionStrategy(this._logger); // await GetSelectionStrategy(); 
             var groupChat = new AgentGroupChat(agents.ToArray())
             {
                 ExecutionSettings = new AgentGroupChatSettings
@@ -79,6 +85,8 @@ namespace ThinFileCreditWorthiness.ApiService.Agents
                 Content = userMessage,
             });
 
+            return groupChat.InvokeAsync();
+
             // TODO: Remove
             //var pqi_score = new JsonObject();
             //pqi_score.Add("score_pqi", 600);
@@ -86,8 +94,6 @@ namespace ThinFileCreditWorthiness.ApiService.Agents
             //bci_score.Add("score_bci", 800);
             //groupChat.AddChatMessage(new ChatMessageContent { Content = "PQI Score is " + pqi_score.ToJsonString(), Role = AuthorRole.User });
             //groupChat.AddChatMessage(new ChatMessageContent { Content = "BCI Score is " + bci_score.ToJsonString(), Role = AuthorRole.User });
-            
-            return groupChat.InvokeAsync();
 
             //await foreach (var item in agent.InvokeAsync())
             //{

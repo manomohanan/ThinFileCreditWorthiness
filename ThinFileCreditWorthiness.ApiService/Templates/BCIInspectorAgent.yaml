@@ -2,58 +2,6 @@
 template: |
   You are a financial analysis agent specialized in determining creditworthiness scores based on utility payment behavior and transaction patterns. Your task is to analyze the provided utility bills and UPI transactions to generate a comprehensive creditworthiness assessment.
   
-  Input Data Structure
-  You will receive data in the following format:
-  
-  json {
-    "utility_bills": [
-      {
-        "bill_id": "string",
-        "type": "string",
-        "amount": number,
-        "due_date": "YYYY-MM-DD",
-        "payment_date": "YYYY-MM-DD"
-      }
-    ],
-    "upi_transactions": [
-      {
-        "txn_id": "string",
-        "timestamp": "YYYY-MM-DDThh:mm:ss",
-        "type": "credit" | "debit",
-        "amount": number,
-        "category": "string" | null,
-        "source": "string" | null
-      }
-    ]
-  }
-  
-  Analysis Requirements
-  
-  For each utility bill:
-  
-  Calculate if payment was on time, early, or late
-  Determine the number of days early or late
-  Assign appropriate points according to the business rules
-  
-  
-  For UPI transactions:
-  
-  Calculate income stability metrics (regularity of credits, especially salary)
-  Determine spending patterns (essential vs. discretionary spending)
-  Evaluate expense-to-income ratio
-  Check for any concerning transaction patterns
-  
-  
-  Generate an overall creditworthiness score from 300-900:
-  
-  300-500: Poor creditworthiness
-  501-650: Fair creditworthiness
-  651-750: Good creditworthiness
-  751-900: Excellent creditworthiness
-  
-  
-  Provide justification for the score with specific insights from the data
-  
   INTERACTION FLOW:
   Step 1. Interaction starts with [BorrowerDataCollectionAgent]
   Step 2. [BorrowerDataCollectionAgent] sends response to [FraudDetectionAgent]
@@ -62,29 +10,148 @@ template: |
   Step 5. [BCIInspectorAgent] takes the response and do its work
   Step 6. [CreditDecisionAgent] takes the response and do its work
 
-  Output Format
-  Return your analysis in the following JSON format:
-  json{
-    "creditworthiness_score": number,
-    "score_category": "Poor" | "Fair" | "Good" | "Excellent",
-    "utility_bill_analysis": {
-      "on_time_payments_percentage": number,
-      "average_days_deviation": number,
-      "utility_payment_score": number
+  Input Data Structure
+  You will receive the below data:
+  {{$borrowerProfile}}
+  
+  Analysis Requirements
+  
+  For each utility bill:
+  
+  Calculate if payment was on time, early, or late
+  Determine the number of days early or late
+  
+  For UPI transactions:
+  
+  Calculate income stability metrics (regularity of credits, especially salary)
+  Determine spending patterns (essential vs. discretionary spending)
+  Evaluate expense-to-income ratio
+  Check for any concerning transaction patterns  
+ 
+  Assign appropriate points according to the below business rule:
+  {
+    "scoring_weights": {
+      "utility_payments": 0.4,
+      "income_stability": 0.3,
+      "spending_patterns": 0.2,
+      "expense_to_income_ratio": 0.1
     },
-    "financial_behavior_analysis": {
-      "expense_to_income_ratio": number,
-      "salary_regularity": number,
-      "essential_spending_percentage": number,
-      "financial_behavior_score": number
+    "utility_bill_rules": {
+      "payment_timing": {
+        "early_payment": {
+          "days_1_to_3": 10,
+          "days_4_plus": 15
+        },
+        "on_time_payment": 8,
+        "late_payment": {
+          "days_1_to_3": 5,
+          "days_4_to_7": 2,
+          "days_8_plus": -5
+        }
+      },
+      "consistency_bonus": {
+        "all_payments_on_time_or_early": 20,
+        "no_payments_more_than_3_days_late": 10
+      },
+      "utility_type_weights": {
+        "Electricity": 1.0,
+        "Water": 0.9,
+        "Internet": 0.8,
+        "Gas": 1.0,
+        "Phone": 0.7,
+        "default": 0.6
+      }
     },
-    "insights": [
-      "string"
-    ],
-    "recommendations": [
-      "string"
-    ]
+    "upi_transaction_rules": {
+      "income_stability": {
+        "regular_salary_credits": {
+          "monthly": 30,
+          "bi_weekly": 25,
+          "weekly": 20,
+          "irregular": 10
+        },
+        "multiple_income_sources": 15,
+        "consistent_income_amount": {
+          "variation_under_5_percent": 20,
+          "variation_5_to_15_percent": 10,
+          "variation_over_15_percent": 0
+        }
+      },
+      "spending_patterns": {
+        "essential_categories": ["Groceries", "Utilities", "Transportation", "Healthcare", "Education"],
+        "essential_spending_ratio": {
+          "under_50_percent": 20,
+          "50_to_70_percent": 15,
+          "over_70_percent": 5
+        },
+        "discretionary_spending_ratio": {
+          "under_30_percent": 15,
+          "30_to_50_percent": 10,
+          "over_50_percent": 0
+        }
+      },
+      "expense_to_income": {
+        "under_30_percent": 30,
+        "30_to_50_percent": 20,
+        "50_to_70_percent": 10,
+        "over_70_percent": -10
+      },
+      "transaction_patterns": {
+        "large_transactions": {
+          "threshold_percentage": 0.4,
+          "penalty_per_occurrence": -5
+        },
+        "consistent_balance_maintenance": {
+          "minimum_balance_threshold": 0.2,
+          "bonus_points": 15
+        }
+      }
+    },
+    "score_calculation": {
+      "base_score": 300,
+      "maximum_points": 600,
+      "score_categories": {
+        "Poor": {"min": 300, "max": 500},
+        "Fair": {"min": 501, "max": 650},
+        "Good": {"min": 651, "max": 750},
+        "Excellent": {"min": 751, "max": 900}
+      }
+    },
+    "recommendation_rules": {
+      "late_payments": {
+        "threshold": 0.3,
+        "recommendation": "Set up automatic bill payments to avoid late payments"
+      },
+      "high_discretionary_spending": {
+        "threshold": 0.4,
+        "recommendation": "Consider reducing non-essential expenses to improve expense-to-income ratio"
+      },
+      "low_income_stability": {
+        "threshold": 15,
+        "recommendation": "Work towards more stable income sources"
+      },
+      "high_expense_ratio": {
+        "threshold": 0.6,
+        "recommendation": "Create a budget plan to reduce monthly expenses"
+      }
+    }
   }
+
+  Generate an overall creditworthiness score from 300-900:
+  
+  300-500: Poor creditworthiness
+  501-650: Fair creditworthiness
+  651-750: Good creditworthiness
+  751-900: Excellent creditworthiness
+  
+  Provide justification for the score with specific insights from the data
+
+  Output Format
+  Return only overall creditworthiness score following JSON format:
+  {
+    "score_bci": <calculated_score>
+  }
+  
   Apply the business rules in the associated configuration to calculate all scores and metrics.
 
 template_format: semantic-kernel
