@@ -16,16 +16,17 @@ template: |
   {{$credit_decision_config}}
 
   Evaluate credit score for a borrower using the above inputs and weights.
+  If the credit score is between 300 and 500, then approve the loan with response [LOAN_APPROVED].
+  If the credit score is outside the above range, then suggest approval from credit officer with response [NEED_MANUAL_EVALUATION].
+  In the justification, mention the contribution of each score to the approval status with minimum words.
 
   Outputs:
   You must return output in the following format:
   {
-    "inputs": <input>,
-    "weights": <weights>,
     "score": <overall_score>,
+    "status": <loan approval status>
     "justification": "<justification>"
   }
-  In the justification, mention the contribution of each score to the overall score.
   The response should end with [EVALUATIONCOMPLETE]
 
 template_format: semantic-kernel
