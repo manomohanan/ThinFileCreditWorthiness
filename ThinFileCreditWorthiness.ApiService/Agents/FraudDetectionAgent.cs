@@ -25,10 +25,10 @@ namespace ThinFileCreditWorthiness.ApiService.Agents
             var configBasePath = _configuration["AgentConfigPath"];
             var agentConfig = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, configBasePath, "Data.json"));
             
-            var config = JsonSerializer.Deserialize<CreditDecisionConfig>(agentConfig);
+            var config = JsonSerializer.Deserialize<FraudDetectionConfig>(agentConfig);
             var args = new KernelArguments()
             {
-                //{ "borrowerProfile", JsonSerializer.Serialize(this._borrowerProfile) }
+                { "borrowerProfile", JsonSerializer.Serialize(this._borrowerProfile) }
             };
 
             return Task.FromResult(args);
