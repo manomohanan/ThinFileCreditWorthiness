@@ -29,6 +29,7 @@ builder.Services.AddScoped(sp =>
         .Build();
 
     kernel.Plugins.AddFromType<CreditDecisionPlugin>("CreditDecisionPlugin");
+    kernel.Plugins.AddFromType<PQIPlugin>("PQIPlugin");
 
     return kernel;
 });
